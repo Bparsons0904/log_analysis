@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import psycopg2
+import string
 
 # scripts for questions 1-3
 
@@ -18,6 +19,7 @@ select author_name.name, sum(author_sum.sum) as total
   where author_sum.slug=author_name.slug
   group by author_name.name
   order by total desc limit 3;"""
+
 # Compared error rate by date, outputing days over 1%
 question3 = """
 select error.date_part, error.errors, success.success
@@ -29,38 +31,76 @@ select error.date_part, error.errors, success.success
 # Database to connect to
 DBNAME = "news"
 
+# from psycopg2 documentation, uses float instead of DECIMAL as part of return
+DEC2FLOAT = psycopg2.extensions.new_type(
+    psycopg2.extensions.DECIMAL.values,
+    'DEC2FLOAT',
+    lambda value, curs: float(value) if value is not None else None)
+psycopg2.extensions.register_type(DEC2FLOAT)
+
+q1_results = []
+q2_results = []
+q3_results = []
+
 def q1(): #Goes through
     conn = psycopg2.connect(database=DBNAME)
     cursor = conn.cursor()
-    cursor.execute(questions[0])
+    cursor.execute(question1)
     results = cursor.fetchall()
-    print(results)
+    q1_results.append(results)
     conn.close()
 
 def q2():
     conn = psycopg2.connect(database=DBNAME)
     cursor = conn.cursor()
-    cursor.execute(questions[1])
+    cursor.execute(question2)
     results = cursor.fetchall()
-    print(results)
+    q2_results.append(results)
     conn.close()
 
 def q3():
     conn = psycopg2.connect(database=DBNAME)
     cursor = conn.cursor()
-    cursor.execute(questions[2])
+    cursor.execute(question3)
     results = cursor.fetchall()
-    print(results)
+    q3_results.append(results)
     conn.close()
 
-q1()
-q2()
-q3()
-#print(connect(author_sum))
-#print(connect2(author_sum))
+def q1_format():
+    count = 0
+    result = []
+    while count < 3:
+        formated = q1_results[0][count][0].replace("-", " ")
+        formated = string.capwords(formated)
+        result.append(formated)
+        count += 1
+    return result
 
-#print connect()
-#print(connect)("select * from author_sum")
+def q1_print():
+    articles = q1_format()
+    print("The 3 most popular articles:")
+    print('"'+articles[0]+'" - '+ str(q1_results[0][0][1]) +' views')
+    print('"'+articles[1]+'" - '+ str(q1_results[0][1][1]) +' views')
+    print('"'+articles[2]+'" - '+ str(q1_results[0][2][1]) +' views\n')
+
+def q2_format:
+    result = []
+    
+
+def q2_print():
+    print("The 3 most popular author's:")
+    print('"'+q2_results[0][0][0]+'" - '+ str(q2_results[0][0][1]) +' views')
+    print('"'+q2_results[0][1][0]+'" - '+ str(q2_results[0][1][1]) +' views')
+    print('"'+q2_results[0][2][0]+'" - '+ str(q2_results[0][2][1]) +' views\n')
+
+def run_scripts():
+    q1()
+    q2()
+    q3()
+    q1_print()
+    q2_print()
+
+run_scripts()
 
 
 # python3 log_analysis.py

@@ -1,7 +1,7 @@
 author_sum view: Count of articles w/ author ID
 
 create view author_sum as
-  select slug, author, count(log.path) as sum
+  select slug, author, count(log.path)::numeric as sum
   from articles, log
   where log.path = '/article/' || articles.slug
   group by articles.author, articles.slug
