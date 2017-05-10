@@ -1,0 +1,14 @@
+ubuntu@ubuntu-xenial:/vagrant$ python3 log_analysis.py
+
+The 3 most popular articles:
+"Candidate Is Jerk" - 338647 views
+"Bears Love Berries" - 253801 views
+"Bad Things Gone" - 170098 views
+
+The 3 most popular author's:
+Ursula La Multa" - 507594 views
+Rudolf von Treppenwitz" - 423457 views
+Anonymous Contributor" - 170098 views
+
+Days with more than 1% of request that lead to an error:
+2016-07-17 - 2.32%
