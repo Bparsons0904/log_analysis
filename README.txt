@@ -1,4 +1,8 @@
-author_sum view: Count of articles w/ author ID
+Steps to run program:
+  1. Use scripts below to create 4 (author_sum, author_name, error and success) views.
+  2. Run python3 log_anaylsis.py
+
+view: Count of articles w/ author ID
 
 create view author_sum as
   select slug, author, count(log.path)::numeric as sum
@@ -30,11 +34,11 @@ create view author_name as
 error view: Count days with errors in the connections
 
 create view error as
-  select extract(day from time), count(*) as errors
+  select date(time), count(*) as errors
   from log
   where status not like '200%'
-  group by extract(day from time)
-  order by extract(day from time);
+  group by date(time)
+  order by date(time);
 
   | Column      | Type             |
   | :-----------| :--------------- |
@@ -45,11 +49,11 @@ create view error as
 success view: Count days with errors in the connections
 
 create view success as
-  select extract(day from time), count(*) as success
+  select date(time), count(*) as success
   from log
   where status like '200%'
-  group by extract(day from time)
-  order by extract(day from time);
+  group by date(time)
+  order by date(time);
 
   | Column      | Type             |
   | :-----------| :--------------- |
